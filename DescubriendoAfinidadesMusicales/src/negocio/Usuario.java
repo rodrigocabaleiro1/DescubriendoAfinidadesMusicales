@@ -12,6 +12,15 @@ public class Usuario {
 		interesUrbano = 1;
 	}
 	
+	public Usuario(String nombre, String interesFolclore, String interesTango, 
+			String interesRockNacional, String interesUrbano) {
+		this.nombre = nombre;
+		this.interesFolclore = Integer.parseInt(interesFolclore);
+		this.interesTango = Integer.parseInt(interesTango);
+		this.interesRockNacional = Integer.parseInt(interesRockNacional);
+		this.interesUrbano = Integer.parseInt(interesUrbano);
+	}
+
 	public void incrementarInteresFolclore() {
 		validarInteresAlto(interesFolclore);
 		interesFolclore++;
@@ -69,6 +78,7 @@ public class Usuario {
 	@Override 
 	public String toString() {
 		StringBuilder texto = new StringBuilder();
+		texto.append("--------------------------\n");
 		texto.append("Usuario: " + nombre + "\n");
 		texto.append("--------------------------\n");
 		texto.append("_Interes por el Tango: " + interesTango + "\n");

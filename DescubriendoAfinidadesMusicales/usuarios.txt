@@ -1,0 +1,38 @@
+-----------------
+Usuarios
+-----------------
+nombre = Carlos Russo
+interesFolclore = 3
+interesTango = 2
+interesRockNacional =5
+interesUrbano = 1
+-----------------
+nombre = Leonardo Tortuga
+interesFolclore = 1
+interesTango = 2
+interesRockNacional = 3
+interesUrbano = 5
+-----------------
+nombre = Rafael Tortuga
+interesFolclore = 1
+interesTango = 1
+interesRockNacional = 2
+interesUrbano = 5
+-----------------
+nombre = Miguel Angel Tortuga
+interesFolclore = 1
+interesTango = 1
+interesRockNacional = 5
+interesUrbano = 5
+-----------------
+nombre = Donatelo Tortuga
+interesFolclore = 5
+interesTango = 5
+interesRockNacional = 5
+interesUrbano = 4
+-----------------
+nombre = Son Goku
+interesFolclore = 1
+interesTango = 1
+interesRockNacional = 1
+interesUrbano = 1
