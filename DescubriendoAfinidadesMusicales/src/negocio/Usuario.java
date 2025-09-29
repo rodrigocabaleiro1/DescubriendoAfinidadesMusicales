@@ -12,69 +12,106 @@ public class Usuario {
 		interesUrbano = 1;
 	}
 	
-	public Usuario(String nombre, String interesFolclore, String interesTango, 
-			String interesRockNacional, String interesUrbano) {
+	public Usuario(String nombre, int interesFolclore, int interesTango, 
+			int interesRockNacional, int interesUrbano) {
+		//validarDatos(nombre, interesFolclore, interesTango, interesRockNacional, interesUrbano);
 		this.nombre = nombre;
-		this.interesFolclore = Integer.parseInt(interesFolclore);
-		this.interesTango = Integer.parseInt(interesTango);
-		this.interesRockNacional = Integer.parseInt(interesRockNacional);
-		this.interesUrbano = Integer.parseInt(interesUrbano);
+		this.interesFolclore = interesFolclore;
+		this.interesTango = interesTango;
+		this.interesRockNacional = interesRockNacional;
+		this.interesUrbano = interesUrbano;
 	}
 
-	public void incrementarInteresFolclore() {
-		validarInteresAlto(interesFolclore);
-		interesFolclore++;
+	private int convertirNumero(String numero) {
+		return Integer.parseInt(numero);
 	}
 	
-	public void incrementarInteresTango() {
-		validarInteresAlto(interesTango);
-		interesTango++;
+	public String nombre() {
+		return nombre;
 	}
 	
-	public void incrementarInteresRockNacional() {
-		validarInteresAlto(interesRockNacional);
-		interesRockNacional++;
+	public int interesFolclore() {
+		return interesFolclore;
 	}
 	
-	public void incrementarInteresUrbano() {
-		validarInteresAlto(interesUrbano);
-		interesUrbano++;
+	public int interesTango() {
+		return interesTango;
 	}
 	
-	public void disminuirInteresFolclore() {
-		validarInteresBajo(interesFolclore);
-		interesFolclore--;
+	public int interesRockNacional() {
+		return interesRockNacional;
 	}
 	
-	public void disminuirInteresTango() {
-		validarInteresBajo(interesTango);
-		interesTango--;
-	}
-	
-	public void disminuirInteresRockNacional() {
-		validarInteresBajo(interesRockNacional);
-		interesRockNacional--;
-	}
-	
-	public void disminuirInteresUrbano() {
-		validarInteresBajo(interesUrbano);
-		interesUrbano--;
+	public int interesUrbano() {
+		return interesUrbano;
 	}
 	
 	//---------------------------------------------
 	//	Validaciones
 	//---------------------------------------------
-	public void validarInteresBajo(int interesAnalizado) {
-		if(interesAnalizado <= 1) {
-			throw new RuntimeException("¡ERROR! El interes en el area musical seleccionada ya esta al MINIMO posible");
+	private void validarDatos(String nombre, String interesFolclore, String interesTango,
+			String interesRockNacional, String interesUrbano) {
+		validarDato(nombre, "nombre");
+		validarInteres(interesFolclore, "interesFolclore");
+		validarInteres(interesTango, "interesTango");
+		validarInteres(interesUrbano, "interesUrbano");
+		validarInteres(interesRockNacional, "interesRockNacional");
+	}
+
+	private void validarDato(String dato, String nombreDato) {
+		if(datoVacio(dato)) {
+			throw new IllegalArgumentException ("el dato '" + nombreDato + "' no puede estar vacio");
+		}
+		
+	}
+
+	private boolean datoVacio(String dato) {
+		return dato.length() == 0 || dato == "" || dato == " " || dato == null;
+	}
+
+	private void validarInteres(String interes, String nombreInteres) {
+		validarDato(interes, nombreInteres);
+		validarValorInteres(interes, nombreInteres);
+	}
+
+	private void validarValorInteres(String interes, String nombreInteres) {
+		esNumero(interes, nombreInteres);
+		int numero = convertirNumero(interes);
+		
+	}
+
+	private void esNumero(String interes, String nombreInteres) {
+		if (noEsNumero(interes)) {
+			throw new NumberFormatException ("el dato '" + nombreInteres + "' debe ser un Número");
+		}
+		
+	}
+
+	private boolean noEsNumero(String interes) {
+		try {
+	        int n = convertirNumero(interes);
+	        return false;
+	    } catch (NumberFormatException e) {
+	        return true;
+	    }
+	}
+	
+	public void validarInteresBajo(int interesAnalizado, String nombreInteres) {
+		if(interesAnalizado < 1) {
+			throw new IllegalArgumentException("¡ERROR! El dato '"+ nombreInteres + "' no puede ser menor a 1. "
+					+ "DatoIngresado: " + interesAnalizado);
 		}
 	}
-	public void validarInteresAlto(int interesAnalizado) {
-		if(interesAnalizado >= 5) {
-			throw new RuntimeException("¡ERROR! El interes en el area musical seleccionada ya esta al MAXIMO posible");
+	public void validarInteresAlto(int interesAnalizado, String nombreInteres) {
+		if(interesAnalizado > 5) {
+			throw new IllegalArgumentException("¡ERROR! El dato '"+ nombreInteres + "' no puede ser mayor a 5. "
+					+ "DatoIngresado: " + interesAnalizado);
 		}
 	}
 	
+	//---------------------------------------------
+	// Override
+	//---------------------------------------------
 	@Override 
 	public String toString() {
 		StringBuilder texto = new StringBuilder();

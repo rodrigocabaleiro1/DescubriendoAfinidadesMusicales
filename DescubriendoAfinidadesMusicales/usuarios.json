@@ -1,0 +1,55 @@
+[
+    {
+        "nombre" : "carlos Russo",
+        "interesFolclore" : 3,
+        "interesTango" : 2,
+        "interesRockNacional" :5,
+        "interesUrbano" : 1
+    },
+
+    {
+        "nombre" : "Leonardo",
+        "interesFolclore" : 1,
+        "interesTango" : 2,
+        "interesRockNacional" :3,
+        "interesUrbano" : 5
+    },
+
+    {
+        "nombre" : "Rafael",
+        "interesFolclore" : 1,
+        "interesTango" : 1,
+        "interesRockNacional" :2,
+        "interesUrbano" : 5
+    },
+
+    {
+        "nombre" : "Miguel Angel",
+        "interesFolclore" : 1,
+        "interesTango" : 1,
+        "interesRockNacional" :5,
+        "interesUrbano" : 5
+    },
+
+    {
+        "nombre" : "Donatelo",
+        "interesFolclore" : 5,
+        "interesTango" : 5,
+        "interesRockNacional" :5,
+        "interesUrbano" : 4
+    },
+    {
+        "nombre" : "Son Goku",
+        "interesFolclore" : 1,
+        "interesTango" : 1,
+        "interesRockNacional" :1,
+        "interesUrbano" : 1
+    },
+	{
+	        "nombre" : "Dante",
+	        "interesFolclore" : 1,
+	        "interesTango" : 2,
+	        "interesRockNacional" :5,
+	        "interesUrbano" : 5
+	}
+]
