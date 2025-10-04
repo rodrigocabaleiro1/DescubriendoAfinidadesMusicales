@@ -56,4 +56,8 @@ public class IndiceDeSimilaridad {
 		}
 		
 	}
+	public int[][] getMatriz() {
+	    return similaridadUsuarios;
+	}
+
 }
