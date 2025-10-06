@@ -5,6 +5,7 @@ import java.util.List;
 public class IndiceDeSimilaridad {
 	
 	private int [][] similaridadUsuarios;
+	
 	private Usuario[] usuarios;
 	private int cantidadUsuarios;
 	
@@ -34,10 +35,12 @@ public class IndiceDeSimilaridad {
 
 	private int calcularSimilaridad(Usuario primario, Usuario secundario) {
 		int folclore, tango, rockNacional, urbano, similaridad;
+		
 		folclore = modulo(primario.interesFolclore() - secundario.interesFolclore());
 		tango = modulo(primario.interesTango() - secundario.interesTango());
 		rockNacional = modulo(primario.interesRockNacional() - secundario.interesRockNacional());
 		urbano = modulo(primario.interesUrbano() - secundario.interesUrbano());
+		
 		similaridad = folclore + tango + rockNacional + urbano;
 		return similaridad;
 	}

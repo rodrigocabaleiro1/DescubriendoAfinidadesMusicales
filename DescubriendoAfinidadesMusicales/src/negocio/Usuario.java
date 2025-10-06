@@ -4,26 +4,14 @@ public class Usuario {
 	private int interesFolclore, interesTango, interesRockNacional, interesUrbano;
 	private String nombre;
 	
-	public Usuario(String nombre) {
-		this.nombre = nombre;
-		interesFolclore = 1;
-		interesTango = 1;
-		interesRockNacional = 1;
-		interesUrbano = 1;
-	}
-	
 	public Usuario(String nombre, int interesFolclore, int interesTango, 
 			int interesRockNacional, int interesUrbano) {
-		//validarDatos(nombre, interesFolclore, interesTango, interesRockNacional, interesUrbano);
+		validarIntereses(interesFolclore, interesTango, interesRockNacional, interesUrbano);
 		this.nombre = nombre;
 		this.interesFolclore = interesFolclore;
 		this.interesTango = interesTango;
 		this.interesRockNacional = interesRockNacional;
 		this.interesUrbano = interesUrbano;
-	}
-
-	private int convertirNumero(String numero) {
-		return Integer.parseInt(numero);
 	}
 	
 	public String nombre() {
@@ -46,63 +34,30 @@ public class Usuario {
 		return interesUrbano;
 	}
 	
-	//---------------------------------------------
-	//	Validaciones
-	//---------------------------------------------
-	private void validarDatos(String nombre, String interesFolclore, String interesTango,
-			String interesRockNacional, String interesUrbano) {
-		validarDato(nombre, "nombre");
-		validarInteres(interesFolclore, "interesFolclore");
-		validarInteres(interesTango, "interesTango");
-		validarInteres(interesUrbano, "interesUrbano");
-		validarInteres(interesRockNacional, "interesRockNacional");
-	}
 
-	private void validarDato(String dato, String nombreDato) {
-		if(datoVacio(dato)) {
-			throw new IllegalArgumentException ("el dato '" + nombreDato + "' no puede estar vacio");
-		}
+	private void validarIntereses(int interesFolclore, int interesTango, 
+			int interesRockNacional, int interesUrbano) {
+		validarInteresBajo(interesFolclore, "Interes Folclore");
+		validarInteresAlto(interesFolclore, "Interes Folclore");
 		
-	}
-
-	private boolean datoVacio(String dato) {
-		return dato.length() == 0 || dato == "" || dato == " " || dato == null;
-	}
-
-	private void validarInteres(String interes, String nombreInteres) {
-		validarDato(interes, nombreInteres);
-		validarValorInteres(interes, nombreInteres);
-	}
-
-	private void validarValorInteres(String interes, String nombreInteres) {
-		esNumero(interes, nombreInteres);
-		int numero = convertirNumero(interes);
+		validarInteresBajo(interesTango, "Interes Tango");
+		validarInteresAlto(interesTango, "Interes Tango");
 		
-	}
-
-	private void esNumero(String interes, String nombreInteres) {
-		if (noEsNumero(interes)) {
-			throw new NumberFormatException ("el dato '" + nombreInteres + "' debe ser un Número");
-		}
+		validarInteresBajo(interesRockNacional, "Interes Rock Nacional");
+		validarInteresAlto(interesRockNacional, "Interes Rock Nacional");
 		
-	}
-
-	private boolean noEsNumero(String interes) {
-		try {
-	        int n = convertirNumero(interes);
-	        return false;
-	    } catch (NumberFormatException e) {
-	        return true;
-	    }
+		validarInteresBajo(interesUrbano, "Interes Urbano");
+		validarInteresAlto(interesUrbano, "Interes Urbano");
 	}
 	
-	public void validarInteresBajo(int interesAnalizado, String nombreInteres) {
+	
+	private void validarInteresBajo(int interesAnalizado, String nombreInteres) {
 		if(interesAnalizado < 1) {
 			throw new IllegalArgumentException("¡ERROR! El dato '"+ nombreInteres + "' no puede ser menor a 1. "
 					+ "DatoIngresado: " + interesAnalizado);
 		}
 	}
-	public void validarInteresAlto(int interesAnalizado, String nombreInteres) {
+	private void validarInteresAlto(int interesAnalizado, String nombreInteres) {
 		if(interesAnalizado > 5) {
 			throw new IllegalArgumentException("¡ERROR! El dato '"+ nombreInteres + "' no puede ser mayor a 5. "
 					+ "DatoIngresado: " + interesAnalizado);
