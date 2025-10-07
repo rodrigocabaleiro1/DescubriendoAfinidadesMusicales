@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="src" path="DescubriendoAfinidadesMusicales/src"/>
-	<classpathentry kind="src" path="Grado.zip_expanded/Grado/src"/>
-	<classpathentry kind="lib" path="C:/Users/Pablo Ruiz/Desktop/com.google.gson_2.12.1.jar">
+	<classpathentry kind="lib" path="C:/Users/Pablo Ruiz/eclipse/java-2025-06/eclipse/external libreries/gson-2.10.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

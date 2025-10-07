@@ -17,7 +17,7 @@ public abstract class Pantalla extends JFrame{
 	
 	public Pantalla(String titulo, int xPosicion, int yPosicion, int anchoVentana, int altoVentana) {
 		setTitle(titulo);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setBounds(xPosicion, yPosicion, anchoVentana, altoVentana);
 	}
@@ -42,9 +42,10 @@ public abstract class Pantalla extends JFrame{
 		boton.setBackground(color);
 	}
 	
-	protected void agregarElementosPanel(Container container, JPanel elemento, String layout) {
-		container.add(elemento, layout);
+	protected void agregarElementosPanel(Container container, java.awt.Component elemento, String layout) {
+	    container.add(elemento, layout);
 	}
+	
 	protected void agregarElementosPanel(Container container, JLabel elemento, String layout) {
 		container.add(elemento, layout);
 	}
