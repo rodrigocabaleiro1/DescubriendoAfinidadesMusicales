@@ -3,7 +3,15 @@ package controlador;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+
 import negocio.Usuario;
 import pantalla.AltaUsuario;
 import pantalla.MenuPrincipal;
@@ -13,7 +21,15 @@ public class Controlador {
     private MenuPrincipal menuPrincipal;
     private AltaUsuario pantallaAltaUsuario;
     private VisualizarUsuarios pantallaVisualizarUsuarios;
-
+    private Map <String, Usuario> usuarios;
+    private final String ruta = "usuarios.json";
+    private final Gson generadorJson = new Gson(); 
+    
+    
+    public Controlador() {
+    	usuarios = new HashMap<String, Usuario>();
+    	cargarUsuarios();
+    }
     // ======== MÉTODOS DE INICIO ========
     public void iniciarAplicacion() {
         menuPrincipal = new MenuPrincipal(this);
@@ -32,7 +48,7 @@ public class Controlador {
         if (pantallaVisualizarUsuarios == null) {
             pantallaVisualizarUsuarios = new VisualizarUsuarios(this);
         }
-        pantallaVisualizarUsuarios.actualizarListaUsuarios(cargarUsuarios());
+        pantallaVisualizarUsuarios.actualizarListaUsuarios(obtenerNombreUsuarios());
         pantallaVisualizarUsuarios.setVisible(true);
     }
 
@@ -50,39 +66,61 @@ public class Controlador {
     }
 
     private void guardarUsuario(Usuario usuario) throws IOException {
-        Usuario[] usuarios = cargarUsuarios();
-        if (usuarios == null) usuarios = new Usuario[0];
+        agregarUsuario(usuario);       
+        almacenarUsuarios();
+	}
 
-        Usuario[] nuevosUsuarios = new Usuario[usuarios.length + 1];
-        System.arraycopy(usuarios, 0, nuevosUsuarios, 0, usuarios.length);
-        nuevosUsuarios[usuarios.length] = usuario;
+	private void agregarUsuario(Usuario usuario) {
+		this.usuarios.put(usuario.nombre(), usuario);
+	}
 
-        try (FileWriter writer = new FileWriter("usuarios.json")) {
-            Gson gson = new Gson();
-            gson.toJson(nuevosUsuarios, writer);
-        }
+	private void almacenarUsuarios() throws IOException {
+		Collection<Usuario> coleccionUsuarios = this.usuarios.values(); 
+		try (FileWriter fw = new FileWriter(ruta)) {
+        	generadorJson.toJson(coleccionUsuarios, fw);
+        	}
+	}
+
+    public void cargarUsuarios() {
+		try (FileReader reader = new FileReader(ruta)) {
+			Usuario[] arregloUsuarios;
+			arregloUsuarios = generadorJson.fromJson(reader, Usuario[].class);
+			cargarUsuarios(arregloUsuarios);
+	    } catch (Exception e) {
+	        System.out.println(e);
+	    }
+	}
+
+    private void cargarUsuarios(Usuario[] arregloUsuarios) {
+    	if(!arregloVacio(arregloUsuarios)) {
+    		for(Usuario actual: arregloUsuarios) {
+    			agregarUsuario(actual);
+    		}
+    	}
+	}
+
+	public void eliminarUsuario(String nombre) throws IOException {
+    	validarEliminarUsuario(nombre);
+        usuarios.remove(nombre);
+        almacenarUsuarios();
     }
+	
+	public Set<String> obtenerNombreUsuarios() {
+		return usuarios.keySet();
+	}
 
-    public Usuario[] cargarUsuarios() {
-        Gson gson = new Gson();
-        try (FileReader reader = new FileReader("usuarios.json")) {
-            return gson.fromJson(reader, Usuario[].class);
-        } catch (Exception e) {
-            return null;
-        }
-    }
+	private void validarEliminarUsuario(String nombre) {
+		if(!existeUsuario(nombre)) {
+    		throw new RuntimeException("¡ERROR! No es posible eliminar el usuario: " + nombre + " ya que no existe.");
+    	}
+	}
 
-    public void eliminarUsuario(String nombre) throws IOException {
-        Usuario[] usuarios = cargarUsuarios();
-        if (usuarios == null) return;
+	private boolean existeUsuario(String nombre) {
+		return this.usuarios.containsKey(nombre);
+	}
+	
+	private boolean arregloVacio(Usuario[] arreglo) {
+		return arreglo == null || arreglo.length == 0;
+	}
 
-        Usuario[] nuevosUsuarios = java.util.Arrays.stream(usuarios)
-                .filter(u -> !u.nombre().equalsIgnoreCase(nombre))
-                .toArray(Usuario[]::new);
-
-        try (FileWriter writer = new FileWriter("usuarios.json")) {
-            Gson gson = new Gson();
-            gson.toJson(nuevosUsuarios, writer);
-        }
-    }
 }

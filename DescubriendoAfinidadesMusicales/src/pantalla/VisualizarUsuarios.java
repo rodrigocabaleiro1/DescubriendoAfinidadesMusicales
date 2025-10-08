@@ -5,6 +5,7 @@ import negocio.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Set;
 
 @SuppressWarnings("serial")
 public class VisualizarUsuarios extends Pantalla {
@@ -59,11 +60,11 @@ public class VisualizarUsuarios extends Pantalla {
         actualizarLista();
     }
 
-    public void actualizarListaUsuarios(Usuario[] usuarios) {
+    public void actualizarListaUsuarios(Set<String> usuarios) {
         modeloLista.clear();
-        if (usuarios != null && usuarios.length > 0) {
-            for (Usuario u : usuarios) {
-                modeloLista.addElement(u.nombre());
+        if (usuarios != null && usuarios.size() > 0) {
+            for (String nombre : usuarios) {
+                modeloLista.addElement(nombre);
             }
         } else {
             modeloLista.addElement("No hay usuarios cargados.");
@@ -71,7 +72,7 @@ public class VisualizarUsuarios extends Pantalla {
     }
 
     private void actualizarLista() {
-        actualizarListaUsuarios(controlador.cargarUsuarios());
+        actualizarListaUsuarios(controlador.obtenerNombreUsuarios());
     }
 
     private void eliminarUsuarioSeleccionado() {
