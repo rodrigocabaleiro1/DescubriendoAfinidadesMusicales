@@ -48,8 +48,6 @@ public class MenuPrincipal extends Pantalla {
 
         btnAlta.addActionListener(e -> controlador.mostrarPantallaAltaUsuario());
         btnVisualizar.addActionListener(e -> controlador.mostrarPantallaVisualizarUsuarios());
-        btnVerGrafo.addActionListener(e -> JOptionPane.showMessageDialog(this,
-                "La visualización del grafo aún no está implementada.",
-                "Información", JOptionPane.INFORMATION_MESSAGE));
+        btnVerGrafo.addActionListener(e -> controlador.mostrarPantallaGrafo());
     }
 }

@@ -16,11 +16,13 @@ import negocio.Usuario;
 import pantalla.AltaUsuario;
 import pantalla.MenuPrincipal;
 import pantalla.VisualizarUsuarios;
+import pantalla.VistaGrafo;
 
 public class Controlador {
     private MenuPrincipal menuPrincipal;
     private AltaUsuario pantallaAltaUsuario;
     private VisualizarUsuarios pantallaVisualizarUsuarios;
+    private VistaGrafo pantallaGrafo;
     private Map <String, Usuario> usuarios;
     private final String ruta = "usuarios.json";
     private final Gson generadorJson = new Gson(); 
@@ -57,6 +59,13 @@ public class Controlador {
             menuPrincipal = new MenuPrincipal(this);
         }
         menuPrincipal.setVisible(true);
+    }
+    
+    public void mostrarPantallaGrafo() {
+    	if (pantallaGrafo == null) {
+    		pantallaGrafo = new VistaGrafo(this);
+    	}
+    	pantallaGrafo.setVisible(true);
     }
 
     // ======== GESTIÓN DE USUARIOS ========

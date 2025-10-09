@@ -24,7 +24,10 @@ public class AltaUsuario extends Pantalla{
 	public AltaUsuario(Controlador controlador) {
 		super("Alta Usuarios", 20, 20, 480, 640);
 		this.controlador = controlador;
-		
+		inicializarComponentes();
+	}
+
+	private void inicializarComponentes() {
 		header = new JPanel();
 		body = new JPanel();		
 		footer = new JPanel();
