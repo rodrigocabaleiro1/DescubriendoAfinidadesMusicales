@@ -1,25 +1,28 @@
 package negocio;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class IndiceDeSimilaridad {
 	
 	private int [][] similaridadUsuarios;
-	
-	private Usuario[] usuarios;
 	private int cantidadUsuarios;
+	private Map<Integer, String> usuarioSegunIndice;
+	
 	
 	public IndiceDeSimilaridad(Usuario[] usuarios) {
-		this.usuarios = usuarios;
+		usuarioSegunIndice = new HashMap<Integer, String>();
 		cantidadUsuarios = usuarios.length;
 		similaridadUsuarios = new int [cantidadUsuarios][cantidadUsuarios];
-		calcularSimilaridadUsuarios();
+		calcularSimilaridadUsuarios(usuarios);
 	}
 
-	private void calcularSimilaridadUsuarios() {
+	private void calcularSimilaridadUsuarios(Usuario[] usuarios) {
 		int similaridadActual;
 		int usuariosAnalizados = 0;
 		for(Usuario actual: usuarios) {
+			usuarioSegunIndice.put(usuariosAnalizados, actual.obtenerID());
 			for (int i = 0 + usuariosAnalizados; i < cantidadUsuarios; i++) {
 				similaridadActual = calcularSimilaridad(actual, usuarios[i]);
 				establecerSimilaridad(similaridadActual, i, usuariosAnalizados);
@@ -51,7 +54,7 @@ public class IndiceDeSimilaridad {
 	
 	public void MostrarSimilaridades() {
 		for(int i = 0 ; i< cantidadUsuarios; i++) {
-			System.out.print(usuarios[i].nombre() + " | ");
+			System.out.print(usuarioSegunIndice.get(i) + " | ");
 			for (int j = 0; j < cantidadUsuarios; j++) {
 				System.out.print(similaridadUsuarios[i][j] + "  ");
 			}

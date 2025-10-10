@@ -16,21 +16,20 @@ public class PruebaGrafo {
         IndiceDeSimilaridad indice = new IndiceDeSimilaridad(usuarios);
         indice.MostrarSimilaridades();
 
-        Grafo grafo = new Grafo(usuarios, indice.getMatriz());
-        List<Arista> mst = grafo.arbolGeneradorMinimo();
-
+        Grafo grafo = new Grafo(indice.getMatriz());
+        List<Arista> mst = grafo.obtenerArbolGeneradorMinimo();
         System.out.println("\nÁrbol Generador Mínimo:");
         for (Arista a : mst) {
-            System.out.println(a);
+            System.out.println(a.toString());
         }
 
         System.out.println("\nGrupos luego de eliminar la arista más pesada:");
-        List<List<Usuario>> grupos = grafo.dividirEnGrupos(mst);
-        for (int i = 0; i < grupos.size(); i++) {
-            System.out.println("Grupo " + (i+1) + ":");
-            for (Usuario u : grupos.get(i)) {
-                System.out.println("  " + u.nombre());
-            }
-        }
+//        List<List<Usuario>> grupos = grafo.dividirEnGrupos(mst);
+//        for (int i = 0; i < grupos.size(); i++) {
+//            System.out.println("Grupo " + (i+1) + ":");
+//            for (Usuario u : grupos.get(i)) {
+//                System.out.println("  " + u.nombre());
+//            }
+//        }
     }
 }
