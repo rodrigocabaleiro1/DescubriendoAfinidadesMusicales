@@ -12,6 +12,8 @@ import java.util.Set;
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 
+import negocio.Grafo;
+import negocio.IndiceDeSimilaridad;
 import negocio.Usuario;
 import pantalla.AltaUsuario;
 import pantalla.MenuPrincipal;
@@ -66,7 +68,29 @@ public class Controlador {
     		pantallaGrafo = new VistaGrafo(this);
     	}
     	pantallaGrafo.setVisible(true);
+    	probarGrafoUsuarios();
     }
+    
+    
+ // =================== PRUEBA DE GRAFO ===================
+    public void probarGrafoUsuarios() {
+        if (usuarios.isEmpty()) {
+            System.out.println("No hay usuarios cargados para generar el grafo.");
+            return;
+        }
+        Usuario[] arregloUsuarios = usuarios.values().toArray(new Usuario[0]);
+        IndiceDeSimilaridad indice = new IndiceDeSimilaridad(arregloUsuarios);
+        Map<Integer, Usuario> mapaIndices = new HashMap<>();
+        for (int i = 0; i < arregloUsuarios.length; i++) {
+            mapaIndices.put(i, arregloUsuarios[i]);
+        }
+        Grafo<Usuario> grafo = new Grafo<>();
+        grafo.generarAPartirDeMatrizDeSimilaridad(indice.getMatriz(), mapaIndices);
+        System.out.println("Grafo generado a partir de la matriz de similaridad:");
+        grafo.mostrarAristas();
+    }
+
+    
 
     // ======== GESTIÓN DE USUARIOS ========
     public void altaUsuario(String nombre, int interesFolclore, int interesTango, int interesRockNacional, int interesUrbano) throws Exception {

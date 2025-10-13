@@ -1,56 +1,57 @@
 package negocio;
 
-public class Arista <T> implements Comparable<Arista>, Cloneable {
-    private T idUsuario1;
-    private T idUsuario2;
+public class Arista implements Comparable<Arista> {
+    private int origen;
+    private int destino;
     private int peso;
 
-    public Arista(T usuario1, T usuario2, int peso) {
-    	validarArista(usuario1,usuario2);
-        this.idUsuario1 = usuario1;
-        this.idUsuario2 = usuario2;
+    public Arista(int origen, int destino, int peso) {
+        this.origen = origen;
+        this.destino = destino;
         this.peso = peso;
     }
 
-    private void validarArista(T usuario1, T usuario2) {
-    	if(datoNulo(usuario1) || datoNulo(usuario1)) {
-    		throw new IllegalArgumentException("¡ERROR! No es posible crear una arista si hay usuarios con valor nulo");
-    	}
-		if(soloHayUnUsuario(usuario1, usuario2)) {
-			throw new IllegalArgumentException("¡ERROR! No es posible crear una arista para un unico usuario");
-		}
-	}
-    
-    private boolean datoNulo(T dato) {
-		return dato == null;
-	}
-
-	private boolean soloHayUnUsuario(T usuario1, T usuario2) {
-		
-    	return usuario1.equals(usuario2);
+    // Getters
+    public int obtenerOrigen() {
+        return origen;
     }
 
-	public T getUsuario1() { return this.idUsuario1; }
-    public T getUsuario2() { return this.idUsuario2; }
-    public int getPeso() { return peso; }
+    public int obtenerDestino() {
+        return destino;
+    }
 
+    public int obtenerPeso() {
+        return peso;
+    }
+
+    // Setters
+    public void establecerPeso(int nuevoPeso) {
+        this.peso = nuevoPeso;
+    }
+
+    // Para poder ordenar las aristas por peso (necesario para Kruskal)
     @Override
     public int compareTo(Arista otra) {
         return Integer.compare(this.peso, otra.peso);
     }
 
+    // Para mostrar por consola de forma clara
     @Override
     public String toString() {
-        return idUsuario1 + " - " + idUsuario2 + " (" + peso + ")";
-    }
-    
-    @Override
-    protected Object clone() {
-        try {
-            return super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+        return "Arista [origen=" + origen + ", destino=" + destino + ", peso=" + peso + "]";
     }
 
+    // Para comparar aristas por contenido
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Arista)) return false;
+        Arista otra = (Arista) obj;
+        return this.origen == otra.origen && this.destino == otra.destino && this.peso == otra.peso;
+    }
+
+    @Override
+    public int hashCode() {
+        return origen * 31 + destino * 17 + peso;
+    }
 }
