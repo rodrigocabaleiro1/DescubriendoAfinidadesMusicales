@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,18 +80,40 @@ public class Controlador {
             return;
         }
         Usuario[] arregloUsuarios = usuarios.values().toArray(new Usuario[0]);
+        
         IndiceDeSimilaridad indice = new IndiceDeSimilaridad(arregloUsuarios);
+        
         Map<Integer, Usuario> mapaIndices = new HashMap<>();
         for (int i = 0; i < arregloUsuarios.length; i++) {
             mapaIndices.put(i, arregloUsuarios[i]);
         }
-        Grafo<Usuario> grafo = new Grafo<>();
-        grafo.generarAPartirDeMatrizDeSimilaridad(indice.getMatriz(), mapaIndices);
-        System.out.println("Grafo generado a partir de la matriz de similaridad:");
-        grafo.mostrarAristas();
-    }
 
-    
+        Grafo<Integer> grafo = new Grafo<>();
+        for (int i = 0; i < arregloUsuarios.length; i++) {
+            grafo.agregarVertice(i);
+        }
+        int[][] matriz = indice.getMatriz();
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = i + 1; j < matriz[i].length; j++) {
+                grafo.agregarArista(i, j, matriz[i][j]);
+            }
+        }
+
+        System.out.println("Grafo generado a partir de la matriz de similaridad:");
+        Set<String> aristasMostradas = new HashSet<>();
+        for (int origenId : grafo.obtenerVertices()) {
+            for (int destinoId : grafo.obtenerVecinos(origenId)) {
+                String key = origenId < destinoId ? origenId + "-" + destinoId : destinoId + "-" + origenId;
+                if (!aristasMostradas.contains(key)) {
+                    Usuario origen = mapaIndices.get(origenId);
+                    Usuario destino = mapaIndices.get(destinoId);
+                    int peso = grafo.obtenerPeso(origenId, destinoId);
+                    System.out.println(origen.nombre() + " → " + destino.nombre() + " | Peso: " + peso);
+                    aristasMostradas.add(key);
+                }
+            }
+        }
+    }
 
     // ======== GESTIÓN DE USUARIOS ========
     public void altaUsuario(String nombre, int interesFolclore, int interesTango, int interesRockNacional, int interesUrbano) throws Exception {

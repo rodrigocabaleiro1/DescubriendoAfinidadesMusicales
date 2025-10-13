@@ -5,16 +5,18 @@ import java.util.*;
 public class Grafo<T> {
     private Map<Integer, T> vertices;
     private Map<Integer, Map<Integer, Integer>> aristas;
+    private int siguienteId = 0;
 
     public Grafo() {
         vertices = new HashMap<>();
         aristas = new HashMap<>();
     }
-    public void agregarVertice(int id, T dato) {
-        if (vertices.containsKey(id))
-            throw new IllegalArgumentException("El vértice " + id + " ya existe.");
+
+    public int agregarVertice(T dato) {
+        int id = siguienteId++;
         vertices.put(id, dato);
         aristas.put(id, new HashMap<>());
+        return id;
     }
 
     public void eliminarVertice(int id) {
@@ -22,7 +24,7 @@ public class Grafo<T> {
             throw new IllegalArgumentException("El vértice no existe.");
         vertices.remove(id);
         aristas.remove(id);
-        
+
         for (Map<Integer, Integer> conexiones : aristas.values()) {
             conexiones.remove(id);
         }
@@ -74,7 +76,7 @@ public class Grafo<T> {
         return new ArrayList<>(aristas.get(id).keySet());
     }
 
-    public List<Arista> arbolExpansionMinimo() {
+    public List<Arista> arbolGeneradorMinimo() {
         List<Arista> todas = new ArrayList<>();
 
         for (var entry : aristas.entrySet()) {
@@ -82,7 +84,6 @@ public class Grafo<T> {
             for (var destinoPeso : entry.getValue().entrySet()) {
                 int destino = destinoPeso.getKey();
                 int peso = destinoPeso.getValue();
-
                 if (origen < destino) {
                     todas.add(new Arista(origen, destino, peso));
                 }
@@ -92,32 +93,29 @@ public class Grafo<T> {
         todas.sort(Comparator.comparingInt(Arista::obtenerPeso));
 
         Kruskal kruskal = new Kruskal(vertices.size());
-        List<Arista> mst = new ArrayList<>();
+        List<Arista> agm = new ArrayList<>();
 
         for (Arista arista : todas) {
             int origen = arista.obtenerOrigen();
             int destino = arista.obtenerDestino();
-
             if (kruskal.union(origen, destino)) {
-                mst.add(arista);
+                agm.add(arista);
             }
         }
 
-        return mst;
+        return agm;
     }
-
 
     public List<Set<Integer>> particionarEnKComponentes(int k) {
         if (k < 1) throw new IllegalArgumentException("k debe ser mayor o igual a 1");
 
-        List<Arista> mst = arbolExpansionMinimo();
-
-        mst.sort((a, b) -> Integer.compare(b.obtenerPeso(), a.obtenerPeso()));
+        List<Arista> agm = arbolGeneradorMinimo();
+        agm.sort((a, b) -> Integer.compare(b.obtenerPeso(), a.obtenerPeso()));
 
         Kruskal conjuntos = new Kruskal(vertices.size());
 
-        for (int i = k - 1; i < mst.size(); i++) {
-            Arista arista = mst.get(i);
+        for (int i = k - 1; i < agm.size(); i++) {
+            Arista arista = agm.get(i);
             conjuntos.union(arista.obtenerOrigen(), arista.obtenerDestino());
         }
 
@@ -129,13 +127,14 @@ public class Grafo<T> {
 
         return new ArrayList<>(componentes.values());
     }
-    
+
     public void generarAPartirDeMatrizDeSimilaridad(int[][] matriz, Map<Integer, T> verticesConDatos) {
         this.vertices.clear();
         this.aristas.clear();
+        siguienteId = 0;
 
         for (Map.Entry<Integer, T> entry : verticesConDatos.entrySet()) {
-            agregarVertice(entry.getKey(), entry.getValue());
+            agregarVertice(entry.getValue());
         }
 
         int n = matriz.length;
@@ -151,8 +150,8 @@ public class Grafo<T> {
         for (var entry : aristas.entrySet()) {
             int origen = entry.getKey();
             for (var destinoPeso : entry.getValue().entrySet()) {
-                System.out.println(origen + " - " + destinoPeso.getKey() +
-                        " (" + destinoPeso.getValue() + ")");
+                System.out.println("Vértice " + origen + " → Vértice " + destinoPeso.getKey() +
+                        " | Peso: " + destinoPeso.getValue());
             }
         }
     }
