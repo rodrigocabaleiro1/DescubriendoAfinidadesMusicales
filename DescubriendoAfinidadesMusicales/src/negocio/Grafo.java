@@ -1,6 +1,7 @@
 package negocio;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 public class Grafo<T> {
     private Map<Integer, T> vertices;
@@ -79,9 +80,9 @@ public class Grafo<T> {
     public List<Arista> arbolGeneradorMinimo() {
         List<Arista> todas = new ArrayList<>();
 
-        for (var entry : aristas.entrySet()) {
+        for (Entry<Integer, Map<Integer, Integer>> entry : aristas.entrySet()) {
             int origen = entry.getKey();
-            for (var destinoPeso : entry.getValue().entrySet()) {
+            for (Entry<Integer, Integer> destinoPeso : entry.getValue().entrySet()) {
                 int destino = destinoPeso.getKey();
                 int peso = destinoPeso.getValue();
                 if (origen < destino) {
@@ -147,9 +148,9 @@ public class Grafo<T> {
     }
 
     public void mostrarAristas() {
-        for (var entry : aristas.entrySet()) {
+        for (Entry<Integer, Map<Integer, Integer>> entry : aristas.entrySet()) {
             int origen = entry.getKey();
-            for (var destinoPeso : entry.getValue().entrySet()) {
+            for (Entry<Integer, Integer> destinoPeso : entry.getValue().entrySet()) {
                 System.out.println("Vértice " + origen + " → Vértice " + destinoPeso.getKey() +
                         " | Peso: " + destinoPeso.getValue());
             }

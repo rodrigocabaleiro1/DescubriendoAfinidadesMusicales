@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 
 import controlador.Controlador;
 import negocio.Usuario;
-import pruebas.GrafoCircular;
+import pantalla.GrafoCircular;
 //import pantalla.*;
 //
 //import negocio.IndiceDeSimilaridad;
@@ -22,7 +22,6 @@ public class Main {
 	public static void main(String[] args) {		
 		Controlador controlador = new Controlador();
 		controlador.iniciarAplicacion();
-		System.out.println(controlador.obtenerNombreUsuarios());
 		
 		
 		

@@ -62,8 +62,16 @@ public class IndiceDeSimilaridad {
 		}
 		
 	}
-	public int[][] getMatriz() {
+	public int[][] obtenerIndice() {
 	    return similaridadUsuarios;
+	}
+	
+	public String consultarIDUsuario(int indice) {
+		return this.usuarioSegunIndice.get(indice);
+	}
+	
+	public Map<Integer, String> usuariosPorIndice(){
+		return this.usuarioSegunIndice;
 	}
 
 }

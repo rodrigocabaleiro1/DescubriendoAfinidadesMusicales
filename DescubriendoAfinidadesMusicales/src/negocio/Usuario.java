@@ -1,15 +1,14 @@
 package negocio;
 
 public class Usuario {
-	private static int usuariosCreados = 0;
 	private String id;
 	private int interesFolclore, interesTango, interesRockNacional, interesUrbano;
 	private String nombre;
 	
-	public Usuario(String nombre, int interesFolclore, int interesTango, 
+	public Usuario(String id, String nombre, int interesFolclore, int interesTango, 
 			int interesRockNacional, int interesUrbano) {
 		validarIntereses(interesFolclore, interesTango, interesRockNacional, interesUrbano);
-		this.id = "" + usuariosCreados;
+		this.id = id;
 		this.nombre = nombre;
 		this.interesFolclore = interesFolclore;
 		this.interesTango = interesTango;

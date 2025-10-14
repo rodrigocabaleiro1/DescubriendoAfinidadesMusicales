@@ -1,4 +1,4 @@
-package pruebas;
+package pantalla;
 
 import java.awt.Color;
 import java.awt.Graphics;

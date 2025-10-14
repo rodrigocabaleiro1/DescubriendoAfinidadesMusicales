@@ -5,6 +5,8 @@ import negocio.Usuario;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @SuppressWarnings("serial")
@@ -13,6 +15,7 @@ public class VisualizarUsuarios extends Pantalla {
     private final Controlador controlador;
     private DefaultListModel<String> modeloLista;
     private JList<String> listaUsuarios;
+    private Map<Integer, String> usuariosId;
 
     private JPanel header, body, footer;
     private JLabel tituloLabel;
@@ -20,6 +23,7 @@ public class VisualizarUsuarios extends Pantalla {
     public VisualizarUsuarios(Controlador controlador) {
         super("Usuarios Registrados", 20, 20, 400, 500);
         this.controlador = controlador;
+        usuariosId = new HashMap<Integer, String>();
         inicializarComponentes();
     }
 
@@ -63,8 +67,9 @@ public class VisualizarUsuarios extends Pantalla {
     public void actualizarListaUsuarios(Set<String> usuarios) {
         modeloLista.clear();
         if (usuarios != null && usuarios.size() > 0) {
-            for (String nombre : usuarios) {
-                modeloLista.addElement(nombre);
+            for (String clave : usuarios) {
+            	usuariosId.put(modeloLista.getSize(), clave);
+                modeloLista.addElement(controlador.nombreUsuario(clave));
             }
         } else {
             modeloLista.addElement("No hay usuarios cargados.");
@@ -72,7 +77,7 @@ public class VisualizarUsuarios extends Pantalla {
     }
 
     private void actualizarLista() {
-        actualizarListaUsuarios(controlador.obtenerNombreUsuarios());
+        actualizarListaUsuarios(controlador.obtenerIdsUsuarios());
     }
 
     private void eliminarUsuarioSeleccionado() {
@@ -90,7 +95,7 @@ public class VisualizarUsuarios extends Pantalla {
 
         if (confirm == JOptionPane.YES_OPTION) {
             try {
-                controlador.eliminarUsuario(nombreSeleccionado);
+                controlador.eliminarUsuario(usuariosId.get(index));
                 actualizarLista();
                 JOptionPane.showMessageDialog(this, "Usuario eliminado correctamente.");
             } catch (Exception e) {
