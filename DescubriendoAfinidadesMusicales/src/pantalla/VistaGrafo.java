@@ -30,7 +30,8 @@ public class VistaGrafo extends Pantalla{
     private JLabel tituloLabel;
     private JPanel grafo, datosNodo;
     private String nodoSeleccionado;
-    private JTextArea usuarioDatos;
+    private JTextArea usuarioDatos, datosGrafo;
+    private JButton dividirGrupos, ocultarInformacion;
     
 	public VistaGrafo(Controlador controlador) {
 		super("Grafo Representado Graficamente", 20, 20, 800, 800);
@@ -41,10 +42,13 @@ public class VistaGrafo extends Pantalla{
 	private void inicializarComponentes() {
 		header = new JPanel();
         body = new JPanel(new BorderLayout());
-        footer = new JPanel(new GridLayout(1, 2, 10, 10));
-        datosNodo = new JPanel();
+        footer = new JPanel(new GridLayout(1, 0));
+        datosNodo = new JPanel(new GridLayout(0,1));
         usuarioDatos = new JTextArea();
-        generarGrafo();
+        datosGrafo = new JTextArea("");
+        dividirGrupos = new JButton("Dividir Grupos");
+        ocultarInformacion = new JButton("Ocultar Informacion");
+
 
         tituloLabel = new JLabel("Grupos de Usuarios", SwingConstants.CENTER);
         tituloLabel.setFont(new Font("Arial", Font.BOLD, 22));
@@ -54,9 +58,12 @@ public class VistaGrafo extends Pantalla{
         agregarElementosPanel(getContentPane(), body, BorderLayout.CENTER);
         agregarElementosPanel(getContentPane(), footer, BorderLayout.SOUTH);
         agregarElementosPanel(getContentPane(), datosNodo, BorderLayout.EAST);
+        agregarElementosPanel(footer, ocultarInformacion);
+        agregarElementosPanel(footer, dividirGrupos);
         datosNodo.add(usuarioDatos);
-        body.add(grafo);
+        datosNodo.add(datosGrafo);
 
+        generarGrafo();
         definirColorDeFondo(header, Color.LIGHT_GRAY);
         definirColorDeFondo(body, Color.LIGHT_GRAY);
         definirColorDeFondo(footer, Color.LIGHT_GRAY);
@@ -64,6 +71,9 @@ public class VistaGrafo extends Pantalla{
         establecerBorde(header, 20, 20, 20, 20);
         establecerBorde(body, 10, 20, 10, 20);
         establecerBorde(footer, 10, 20, 20, 20);
+        
+        funcionalidadDividirGrupos();
+        funcionalidadOcultarInformacion();
         
         grafo.addMouseListener(new MouseAdapter() {
         @Override
@@ -93,6 +103,28 @@ public class VistaGrafo extends Pantalla{
         });
 
 	}
+
+	private void funcionalidadOcultarInformacion() {
+		ocultarInformacion.addActionListener(e -> {
+        	datosGrafo.setText("");
+        	datosGrafo.setPreferredSize(new Dimension(0, datosGrafo.getPreferredSize().height));
+        	datosGrafo.setBorder(null);
+
+        });
+		
+	}
+
+	private void funcionalidadDividirGrupos() {
+		dividirGrupos.addActionListener(e -> {
+			generarGrafo();
+        	datosGrafo.setText("Datos del Grafo");
+        	datosGrafo.setPreferredSize(new Dimension(200, datosGrafo.getPreferredSize().height));
+        	datosGrafo.setEditable(false);
+        	datosGrafo.setOpaque(false);
+        	datosGrafo.setFocusable(false);
+        	datosGrafo.setLineWrap(true);
+        });
+	}
 	
 	private String informacionUsuario(String id) {
 		StringBuilder sb = new StringBuilder();
@@ -104,6 +136,8 @@ public class VistaGrafo extends Pantalla{
 		List<String> identificadores = obtenerListaID();
 		List<Point> aristas = obtenerAristas();
 		grafo = new GrafoCircular(identificadores, 250, 270, 270, aristas);
+		body.add(grafo);
+		grafo.repaint();
 		
 	}
 
