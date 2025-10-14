@@ -46,7 +46,7 @@ public class Main {
         	int numero = random.nextInt(cantNodos-x-1) + x;
         	aristas.add(new Point(x , numero));
         }
-        f.add(new GrafoCircular(nombres, 250, 300, 300, aristas));
+        //f.add(new GrafoCircular(nombres, 250, 300, 300, aristas));
         f.setVisible(true);
         System.out.println(aristas);
 	}

@@ -1,1 +1,58 @@
-[{"interesFolclore":1,"interesTango":2,"interesRockNacional":3,"interesUrbano":5,"nombre":"Leonardo"},{"interesFolclore":1,"interesTango":1,"interesRockNacional":2,"interesUrbano":5,"nombre":"Rafael"},{"interesFolclore":5,"interesTango":5,"interesRockNacional":5,"interesUrbano":4,"nombre":"Donatelo"},{"interesFolclore":3,"interesTango":2,"interesRockNacional":5,"interesUrbano":1,"nombre":"carlos Russo"},{"interesFolclore":1,"interesTango":1,"interesRockNacional":5,"interesUrbano":5,"nombre":"Miguel Angel"},{"interesFolclore":1,"interesTango":2,"interesRockNacional":5,"interesUrbano":5,"nombre":"Dante"},{"interesFolclore":1,"interesTango":1,"interesRockNacional":1,"interesUrbano":1,"nombre":"Son Goku"},{"interesFolclore":3,"interesTango":3,"interesRockNacional":5,"interesUrbano":4,"nombre":"Leon Scott Kennedy"}]
+[
+  {
+    "id": "1",
+    "interesFolclore": 4,
+    "interesTango": 1,
+    "interesRockNacional": 5,
+    "interesUrbano": 3,
+    "nombre": "Leonardo"
+  },
+  {
+    "id": "2",
+    "interesFolclore": 5,
+    "interesTango": 3,
+    "interesRockNacional": 2,
+    "interesUrbano": 1,
+    "nombre": "Rafael"
+  },
+  {
+    "id": "3",
+    "interesFolclore": 1,
+    "interesTango": 4,
+    "interesRockNacional": 3,
+    "interesUrbano": 5,
+    "nombre": "Miguel Angel"
+  },
+  {
+    "id": "4",
+    "interesFolclore": 3,
+    "interesTango": 5,
+    "interesRockNacional": 1,
+    "interesUrbano": 2,
+    "nombre": "Donatelo"
+  },
+  {
+    "id": "5",
+    "interesFolclore": 2,
+    "interesTango": 2,
+    "interesRockNacional": 4,
+    "interesUrbano": 5,
+    "nombre": "Son Goku"
+  },
+  {
+    "id": "6",
+    "interesFolclore": 5,
+    "interesTango": 1,
+    "interesRockNacional": 1,
+    "interesUrbano": 4,
+    "nombre": "Dante"
+  },
+  {
+    "id": "7",
+    "interesFolclore": 4,
+    "interesTango": 5,
+    "interesRockNacional": 5,
+    "interesUrbano": 3,
+    "nombre": "Leon Scott Kennedy"
+  }
+]

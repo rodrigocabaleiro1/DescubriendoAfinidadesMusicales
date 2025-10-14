@@ -1,131 +1,94 @@
 package pantalla;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.awt.*;
 import java.util.List;
-import java.util.Map;
-
+import java.util.ArrayList;
+import java.util.*;
 import javax.swing.JPanel;
 
-
 public class GrafoCircular extends JPanel{
-		private final List<Point> posiciones = new ArrayList<>();
-		private int diametroNodo;
-		private List<String> nombres = new ArrayList<>();
-		private List<Point> aristas;
-		private Map<String, Color> coloresNodos;
-		private int cantidadNodos;
+    private List<Point> posiciones = new ArrayList<>();
+    private int diametroNodo = 20;
+    private List<String> idsUsuarios;
+    private List<Point> aristas;
+    private Map<Point, Color> coloresAristas = new HashMap<>();
+    private Map<String, Color> coloresNodos = new HashMap<>();
+    private int cantidadNodos;
 
-	    public GrafoCircular(List<String> nombres, int radio, int centroX, int centroY, List<Point> aristas) {
-	    	validarAristasYNodos(aristas, nombres);
-	    	this.aristas = aristas;
-	    	this.nombres = nombres;
-	    	cantidadNodos = nombres.size();
-	    	diametroNodo = 20;
-	    	coloresNodos = new HashMap<String, Color>();
-	        determinarPosicionNodos(radio, centroX, centroY);
-	    }
+    public GrafoCircular(List<String> idsUsuarios, int radio, int centroX, int centroY, List<Point> aristas){
+        if(idsUsuarios == null || idsUsuarios.isEmpty()) throw new RuntimeException("No hay nodos");
+        if(aristas == null) aristas = new ArrayList<>();
 
-	    private void validarAristasYNodos(List<Point> aristas, List<String> nombres) {
-			if(nombres.size() == 0) {
-				throw new RuntimeException("No hay nodos en este Grafo");
-			}
-	    	if(aristas == null) {
-				throw new RuntimeException("no existen aristas");
-			}
-			
-		}
+        this.idsUsuarios = idsUsuarios;
+        this.aristas = aristas;
+        this.cantidadNodos = idsUsuarios.size();
+        determinarPosicionNodos(radio, centroX, centroY);
+    }
 
-		@Override
-	    protected void paintComponent(Graphics g) {
-	        super.paintComponent(g);
-	        dibujarAristas(g);
-	        dibujarVertices(g);
-	    }
-	    
-	    private void determinarPosicionNodos(int radio, int centroX, int centroY) {
-			for (int i = 0; i < this.cantidadNodos; i++) {
-	            double angulo = obtenerAnguloNodo(this.cantidadNodos, i);
-	            int x = obtenerXNodo(radio, centroX, angulo);
-	            int y = obtenerYNodo(radio, centroY, angulo);
-	            posiciones.add(new Point(x, y));
-	        }
-		}
-	    
-		private void dibujarVertices(Graphics g) {
-			g.setColor(Color.BLUE);
-	        	char letra;
-	        for (int i = 0; i < this.cantidadNodos; i++) {
-	        	Color color;
-	        	String nombre = this.nombres.get(i);
-	        	letra = nombre.charAt(0);
-	            Point poscicion = posiciones.get(i);
-	            if(!coloresNodos.containsKey(nombre)) {
-	            	color = Color.BLUE;
-	            	coloresNodos.put(nombre, color);
-	            }else {
-	            	color = coloresNodos.get(nombre);
-	            }
-	            
-	            dibujarVertice(g, letra, poscicion, color);
-	        }
-		}
+    private void determinarPosicionNodos(int radio, int centroX, int centroY){
+        posiciones.clear();
+        for(int i=0;i<cantidadNodos;i++){
+            double angulo = 2*Math.PI*i/cantidadNodos;
+            int x = (int)(centroX + radio*Math.cos(angulo));
+            int y = (int)(centroY + radio*Math.sin(angulo));
+            posiciones.add(new Point(x,y));
+        }
+    }
 
-		private void dibujarVertice(Graphics g, char letra, Point poscicion, Color color) {
-			g.setColor(color);
-			g.fillOval(poscicion.x - 10, poscicion.y - 10, diametroNodo, diametroNodo);
-			g.setColor(Color.WHITE);
-			g.drawString(""+letra, poscicion.x - 4, poscicion.y + 4);
-		}
+    @Override
+    protected void paintComponent(Graphics g){
+        super.paintComponent(g);
+        dibujarAristas(g);
+        dibujarVertices(g);
+    }
 
-		private void dibujarAristas(Graphics g) {
-			g.setColor(Color.BLACK);
-	        for(Point nodosIndice: aristas) {
-	        	 Point a = posiciones.get(nodosIndice.x);
-	             Point b = posiciones.get(nodosIndice.y);
-	             g.drawLine(a.x, a.y, b.x, b.y);
-	        }
-		}
-		
-		private int obtenerYNodo(int radio, int centroY, double angulo) {
-			return (int) (centroY + radio * Math.sin(angulo));
-		}
+    private void dibujarVertices(Graphics g){
+        for(int i=0;i<cantidadNodos;i++){
+            String id = idsUsuarios.get(i);
+            Point pos = posiciones.get(i);
+            Color color = coloresNodos.getOrDefault(id, Color.BLUE);
+            g.setColor(color);
+            g.fillOval(pos.x - diametroNodo/2, pos.y - diametroNodo/2, diametroNodo, diametroNodo);
+            g.setColor(Color.WHITE);
+            g.drawString(id, pos.x - diametroNodo/4, pos.y + diametroNodo/4);
+        }
+    }
 
-		private int obtenerXNodo(int radio, int centroX, double angulo) {
-			return (int) (centroX + radio * Math.cos(angulo));
-		}
+    private void dibujarAristas(Graphics g){
+        for(Point a : aristas){
+            Point p1 = posiciones.get(a.x);
+            Point p2 = posiciones.get(a.y);
+            Color color = coloresAristas.getOrDefault(a, Color.BLACK);
+            g.setColor(color);
+            g.drawLine(p1.x, p1.y, p2.x, p2.y);
+        }
+    }
 
-		private double obtenerAnguloNodo(int cantidadNodos, int indiceNodo) {
-			double circuloCompleto = 2 * Math.PI;
-			return  circuloCompleto * indiceNodo / cantidadNodos;
-		}
+    public String obtenerNodo(Point clic){
+        String seleccionado = null;
+        int radio = diametroNodo/2;
+        for(int i=0;i<posiciones.size();i++){
+            Point pos = posiciones.get(i);
+            String id = idsUsuarios.get(i);
+            if(estaDentroDelCirculo(pos, radio, clic)){
+                seleccionado = id;
+                coloresNodos.put(id, Color.RED);
+            } else {
+                coloresNodos.put(id, Color.BLUE);
+            }
+        }
+        repaint();
+        return seleccionado;
+    }
 
-		public String obtenerNodo(Point posicion) {
-			String ret = null;
-			int radioNodo = diametroNodo/2;
-			for(int i = 0; i < this.posiciones.size(); i++) {
-				String nombre = this.nombres.get(i);
-				if(estaDentroDelCirculo(posiciones.get(i), radioNodo, posicion)) {
-					ret = nombre;
-					this.coloresNodos.put(nombre, Color.red);
-					
-				}
-				else {
-					this.coloresNodos.put(nombre, Color.blue);
-				}
-			}
-			return ret;
-		}
-		
+    private boolean estaDentroDelCirculo(Point centro,int radio, Point clic){
+        int dx = clic.x - centro.x;
+        int dy = clic.y - centro.y;
+        return dx*dx + dy*dy <= radio*radio;
+    }
 
-		private boolean estaDentroDelCirculo(Point circulo, int radio, Point otro) {
-		    double diferenciax = otro.x - circulo.x;
-		    double diferenciay = otro.y - circulo.y;
-		    return (diferenciax * diferenciax + diferenciay * diferenciay) <= (radio * radio);
-		}
-	
-	}
-
+    public void setColoresAristas(Map<Point, Color> map){
+        this.coloresAristas = map;
+        repaint();
+    }
+}

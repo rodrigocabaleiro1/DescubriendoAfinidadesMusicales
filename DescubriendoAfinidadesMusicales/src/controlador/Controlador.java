@@ -4,16 +4,9 @@ import java.awt.Point;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonIOException;
 
 import negocio.Arista;
 import negocio.Grafo;
@@ -25,22 +18,23 @@ import pantalla.VisualizarUsuarios;
 import pantalla.VistaGrafo;
 
 public class Controlador {
-	private static int usuariosCreados = 0;
+    private static int usuariosCreados = 0;
     private MenuPrincipal menuPrincipal;
     private AltaUsuario pantallaAltaUsuario;
     private VisualizarUsuarios pantallaVisualizarUsuarios;
     private VistaGrafo pantallaGrafo;
-    private Map <String, Usuario> usuarios;
+
+    public final Map<String, Usuario> usuarios;
     private final String ruta = "usuarios.json";
     private final Gson generadorJson = new Gson();
     private Grafo<String> grafo;
-    
-    
+
     public Controlador() {
-    	usuarios = new HashMap<String, Usuario>();
-    	cargarUsuarios();
+        usuarios = new HashMap<>();
+        cargarUsuarios();
     }
-    // ======== MÉTODOS DE INICIO ========
+
+    // ======== INICIO DE APLICACIÓN ========
     public void iniciarAplicacion() {
         menuPrincipal = new MenuPrincipal(this);
         menuPrincipal.setVisible(true);
@@ -48,168 +42,212 @@ public class Controlador {
 
     // ======== MENÚ PRINCIPAL ========
     public void mostrarPantallaAltaUsuario() {
-        if (pantallaAltaUsuario == null) {
+        if (pantallaAltaUsuario == null)
             pantallaAltaUsuario = new AltaUsuario(this);
-        }
         pantallaAltaUsuario.setVisible(true);
     }
 
     public void mostrarPantallaVisualizarUsuarios() {
-        if (pantallaVisualizarUsuarios == null) {
+        if (pantallaVisualizarUsuarios == null)
             pantallaVisualizarUsuarios = new VisualizarUsuarios(this);
-        }
+
         pantallaVisualizarUsuarios.actualizarListaUsuarios(obtenerIdsUsuarios());
         pantallaVisualizarUsuarios.setVisible(true);
     }
 
     public void volverAlMenuPrincipal() {
-        if (menuPrincipal == null) {
+        if (menuPrincipal == null)
             menuPrincipal = new MenuPrincipal(this);
-        }
         menuPrincipal.setVisible(true);
     }
-    
+
     public void mostrarPantallaGrafo() {
-    	if(grafo ==null) {
-    		grafo = new Grafo<>();
-    	}
-    	if (pantallaGrafo == null) {
-    		pantallaGrafo = new VistaGrafo(this);
-    	}
-    	pantallaGrafo.setVisible(true);
-    	//probarGrafoUsuarios();
-    }
-    
-    
- // =================== PRUEBA DE GRAFO ===================
-    public void probarGrafoUsuarios() {
-        if (usuarios.isEmpty()) {
-            System.out.println("No hay usuarios cargados para generar el grafo.");
-            return;
-        }
-        Usuario[] arregloUsuarios = usuarios.values().toArray(new Usuario[0]);
-        
-        IndiceDeSimilaridad indice = new IndiceDeSimilaridad(arregloUsuarios);
-        
-        Map<Integer, Usuario> mapaIndices = new HashMap<>();
-        for (int i = 0; i < arregloUsuarios.length; i++) {
-            mapaIndices.put(i, arregloUsuarios[i]);
-        }
+        if (grafo == null)
+            grafo = new Grafo<>();
 
-        Grafo<Integer> grafo = new Grafo<>();
-        for (int i = 0; i < arregloUsuarios.length; i++) {
-            grafo.agregarVertice(i);
-        }
-        int[][] matriz = indice.obtenerIndice();
-        for (int i = 0; i < matriz.length; i++) {
-            for (int j = i + 1; j < matriz[i].length; j++) {
-                grafo.agregarArista(i, j, matriz[i][j]);
-            }
-        }
+        if (pantallaGrafo == null)
+            pantallaGrafo = new VistaGrafo(this);
 
-        System.out.println("Grafo generado a partir de la matriz de similaridad:");
-        Set<String> aristasMostradas = new HashSet<>();
-        for (int origenId : grafo.obtenerVertices()) {
-            for (int destinoId : grafo.obtenerVecinos(origenId)) {
-                String key = origenId < destinoId ? origenId + "-" + destinoId : destinoId + "-" + origenId;
-                if (!aristasMostradas.contains(key)) {
-                    Usuario origen = mapaIndices.get(origenId);
-                    Usuario destino = mapaIndices.get(destinoId);
-                    int peso = grafo.obtenerPeso(origenId, destinoId);
-                    System.out.println(origen.nombre() + " → " + destino.nombre() + " | Peso: " + peso);
-                    aristasMostradas.add(key);
-                }
-            }
-        }
+        pantallaGrafo.setVisible(true);
     }
-    
-    public List<Point> obtenerAristas(){
-    	 Usuario[] usuarios = this.usuarios.values().toArray(new Usuario[0]);
-         IndiceDeSimilaridad similaridades = new IndiceDeSimilaridad(usuarios);
-         this.grafo.generarAPartirDeMatrizDeSimilaridad(similaridades.obtenerIndice(), similaridades.usuariosPorIndice());
-         List<Arista> aristasAGM = grafo.arbolGeneradorMinimo();
-         List<Point> aristas = new ArrayList<>();
-         for(Arista actual: aristasAGM) {
-        	 int origen = actual.obtenerOrigen();
-        	 int destino = actual.obtenerDestino();
-        	 aristas.add(new Point(origen, destino));
-         }
-         return aristas; 
-    }
-    
+
     // ======== GESTIÓN DE USUARIOS ========
-    public void altaUsuario(String nombre, int interesFolclore, int interesTango, int interesRockNacional, int interesUrbano) throws Exception {
-        Usuario usuario = new Usuario("" + usuariosCreados,nombre, interesFolclore, interesTango, interesRockNacional, interesUrbano);
+    public void altaUsuario(String nombre, int interesFolclore, int interesTango,
+                            int interesRockNacional, int interesUrbano) throws Exception {
+        if (nombre == null || nombre.isBlank())
+            throw new IllegalArgumentException("El nombre del usuario no puede ser nulo o vacío.");
+
+        Usuario usuario = new Usuario(
+                String.valueOf(usuariosCreados),
+                nombre,
+                interesFolclore,
+                interesTango,
+                interesRockNacional,
+                interesUrbano
+        );
         guardarUsuario(usuario);
     }
 
     private void guardarUsuario(Usuario usuario) throws IOException {
-        agregarUsuario(usuario);       
+        if (usuario == null) return;
+        agregarUsuario(usuario);
         almacenarUsuarios();
-	}
+    }
 
-	private void agregarUsuario(Usuario usuario) {
-		 ++usuariosCreados;
-		this.usuarios.put(usuario.obtenerID(), usuario);
-	}
+    private void agregarUsuario(Usuario usuario) {
+        if (usuario == null) return;
+        ++usuariosCreados;
+        this.usuarios.put(usuario.obtenerID(), usuario);
+    }
 
-	private void almacenarUsuarios() throws IOException {
-		Collection<Usuario> coleccionUsuarios = this.usuarios.values(); 
-		try (FileWriter fw = new FileWriter(ruta)) {
-        	generadorJson.toJson(coleccionUsuarios, fw);
-        	}
-	}
+    private void almacenarUsuarios() throws IOException {
+        Collection<Usuario> coleccionUsuarios = this.usuarios.values();
+        try (FileWriter fw = new FileWriter(ruta)) {
+            generadorJson.toJson(coleccionUsuarios, fw);
+        }
+    }
 
     public void cargarUsuarios() {
-		try (FileReader reader = new FileReader(ruta)) {
-			Usuario[] arregloUsuarios;
-			arregloUsuarios = generadorJson.fromJson(reader, Usuario[].class);
-			cargarUsuarios(arregloUsuarios);
-			usuariosCreados += arregloUsuarios.length;
-	    } catch (Exception e) {
-	        System.out.println(e);
-	    }
-	}
+        try (FileReader reader = new FileReader(ruta)) {
+            Usuario[] arregloUsuarios = generadorJson.fromJson(reader, Usuario[].class);
+            if (!arregloVacio(arregloUsuarios))
+                cargarUsuarios(arregloUsuarios);
+
+            usuariosCreados += (arregloUsuarios != null ? arregloUsuarios.length : 0);
+        } catch (Exception e) {
+            System.out.println("No se pudieron cargar usuarios: " + e.getMessage());
+        }
+    }
 
     private void cargarUsuarios(Usuario[] arregloUsuarios) {
-    	if(!arregloVacio(arregloUsuarios)) {
-    		for(Usuario actual: arregloUsuarios) { 
-    			agregarUsuario(actual);
-    		}
-    	}
-	}
+        if (arregloUsuarios == null) return;
+        for (Usuario actual : arregloUsuarios) {
+            if (actual != null && actual.obtenerID() != null)
+                agregarUsuario(actual);
+        }
+    }
 
-	public void eliminarUsuario(String clave) throws IOException {
-    	validarEliminarUsuario(clave);
+    public void eliminarUsuario(String clave) throws IOException {
+        validarEliminarUsuario(clave);
         usuarios.remove(clave);
         almacenarUsuarios();
     }
-	
-	
-	public Set<String> obtenerIdsUsuarios() {
-		return this.usuarios.keySet();
-	}
-	
-	public String obtenerInformacionUsuario(String id) {
-		return this.usuarios.get(id).toString();
-	}
 
-	public String nombreUsuario(String clave) {
-		return this.usuarios.get(clave).nombre();
-	}
-	
-	private void validarEliminarUsuario(String clave) {
-		if(!existeUsuario(clave)) {
-    		throw new RuntimeException("¡ERROR! No es posible eliminar el usuario: " + clave + " ya que no existe.");
-    	}
-	}
+    public Set<String> obtenerIdsUsuarios() {
+        return this.usuarios.keySet();
+    }
 
-	private boolean existeUsuario(String clave) {
-		return this.usuarios.containsKey(clave);
-	}
-	
-	private boolean arregloVacio(Usuario[] arreglo) {
-		return arreglo == null || arreglo.length == 0;
-	}
+    public String obtenerInformacionUsuario(String id) {
+        Usuario u = this.usuarios.get(id);
+        return (u != null) ? u.toString() : "Usuario no encontrado";
+    }
 
+    public String nombreUsuario(String clave) {
+        Usuario u = this.usuarios.get(clave);
+        return (u != null) ? u.nombre() : "Desconocido";
+    }
+
+    private void validarEliminarUsuario(String clave) {
+        if (!existeUsuario(clave))
+            throw new RuntimeException("¡ERROR! No es posible eliminar el usuario: " + clave + " ya que no existe.");
+    }
+
+    private boolean existeUsuario(String clave) {
+        return this.usuarios.containsKey(clave);
+    }
+
+    private boolean arregloVacio(Usuario[] arreglo) {
+        return arreglo == null || arreglo.length == 0;
+    }
+
+    // ======== MÉTODOS PARA EL GRAFO ========
+    public Map<String, Usuario> obtenerUsuarios() {
+        return usuarios; // permite acceder a los usuarios desde VistaGrafo
+    }
+
+    public List<Point> obtenerAristas() {
+        Usuario[] usuariosArray = this.usuarios.values().toArray(new Usuario[0]);
+        if (usuariosArray.length == 0) return Collections.emptyList();
+
+        IndiceDeSimilaridad similaridades = new IndiceDeSimilaridad(usuariosArray);
+        this.grafo.generarAPartirDeMatrizDeSimilaridad(similaridades.obtenerIndice(), similaridades.usuariosPorIndice());
+
+        List<Arista> aristasAGM = grafo.arbolGeneradorMinimo();
+        List<Point> aristas = new ArrayList<>();
+
+        for (Arista actual : aristasAGM) {
+            aristas.add(new Point(actual.obtenerOrigen(), actual.obtenerDestino()));
+        }
+        return aristas;
+    }
+
+    public String dividirAGMPorMayorPeso(List<Arista> grupo1, List<Arista> grupo2) {
+        grupo1.clear();
+        grupo2.clear();
+
+        List<Arista> agm = grafo.arbolGeneradorMinimo();
+        if (agm.isEmpty()) return "El AGM está vacío.";
+
+        Arista aristaMax = agm.get(0);
+        for (Arista a : agm) if (a.obtenerPeso() > aristaMax.obtenerPeso()) aristaMax = a;
+        agm.remove(aristaMax);
+
+        Grafo<Integer> grafoTemp = new Grafo<>();
+        for (Integer v : grafo.obtenerVertices()) grafoTemp.agregarVertice(v);
+        for (Arista a : agm) grafoTemp.agregarArista(a.obtenerOrigen(), a.obtenerDestino(), a.obtenerPeso());
+
+        Set<Integer> visitados = new HashSet<>();
+        for (Integer vertice : grafoTemp.obtenerVertices()) {
+            if (!visitados.contains(vertice)) {
+                List<Integer> componente = new ArrayList<>();
+                dfs(grafoTemp, vertice, visitados, componente);
+
+                List<Arista> aristasComponente = new ArrayList<>();
+                for (Arista a : agm) {
+                    if (componente.contains(a.obtenerOrigen()) && componente.contains(a.obtenerDestino())) {
+                        aristasComponente.add(a);
+                    }
+                }
+
+                if (grupo1.isEmpty()) grupo1.addAll(aristasComponente);
+                else grupo2.addAll(aristasComponente);
+            }
+        }
+
+        // Construir String con IDs reales
+        StringBuilder sb = new StringBuilder();
+        sb.append("Arista eliminada del AGM (destacada en ROJO): ")
+          .append(obtenerIdPorIndice(aristaMax.obtenerOrigen())).append(" - ")
+          .append(obtenerIdPorIndice(aristaMax.obtenerDestino()))
+          .append(" | Peso: ").append(aristaMax.obtenerPeso()).append("\n\n");
+
+        sb.append("Grupo 1 (AZUL):\n");
+        if (grupo1.isEmpty()) sb.append("(Este grupo no contiene aristas)\n");
+        else for (Arista a : grupo1)
+            sb.append(obtenerIdPorIndice(a.obtenerOrigen())).append(" -> ")
+              .append(obtenerIdPorIndice(a.obtenerDestino()))
+              .append(" | Peso: ").append(a.obtenerPeso()).append("\n");
+
+        sb.append("\nGrupo 2 (VERDE):\n");
+        if (grupo2.isEmpty()) sb.append("(Este grupo no contiene aristas)\n");
+        else for (Arista a : grupo2)
+            sb.append(obtenerIdPorIndice(a.obtenerOrigen())).append(" -> ")
+              .append(obtenerIdPorIndice(a.obtenerDestino()))
+              .append(" | Peso: ").append(a.obtenerPeso()).append("\n");
+
+        return sb.toString();
+    }
+
+    private String obtenerIdPorIndice(int indice) {
+        List<String> ids = new ArrayList<>(usuarios.keySet());
+        return ids.get(indice);
+    }
+
+    private void dfs(Grafo<Integer> g, Integer v, Set<Integer> visitados, List<Integer> componente) {
+        visitados.add(v);
+        componente.add(v);
+        for (Integer vecino : g.obtenerVecinos(v)) {
+            if (!visitados.contains(vecino)) dfs(g, vecino, visitados, componente);
+        }
+    }
 }
