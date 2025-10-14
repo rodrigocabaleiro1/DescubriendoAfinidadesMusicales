@@ -189,6 +189,10 @@ public class Controlador {
 	public Set<String> obtenerIdsUsuarios() {
 		return this.usuarios.keySet();
 	}
+	
+	public String obtenerInformacionUsuario(String id) {
+		return this.usuarios.get(id).toString();
+	}
 
 	public String nombreUsuario(String clave) {
 		return this.usuarios.get(clave).nombre();
