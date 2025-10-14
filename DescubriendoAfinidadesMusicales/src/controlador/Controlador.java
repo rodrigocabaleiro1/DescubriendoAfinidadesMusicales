@@ -74,7 +74,7 @@ public class Controlador {
     // ======== GESTIÓN DE USUARIOS ========
     public void altaUsuario(String nombre, int interesFolclore, int interesTango,
                             int interesRockNacional, int interesUrbano) throws Exception {
-        if (nombre == null || nombre.isBlank())
+        if (nombre == null || nombre.length()==0)
             throw new IllegalArgumentException("El nombre del usuario no puede ser nulo o vacío.");
 
         Usuario usuario = new Usuario(
